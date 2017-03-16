@@ -1,16 +1,10 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::get('/', 'PostsController@index');
+Route::get('category/{slug}', 'PostsController@category');
+Route::get('tag/{slug}', 'PostsController@category');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('search', 'PostsController@search');
+
+// by default non routed path is single post
+Route::get('{post_name}', 'PostsController@show');
