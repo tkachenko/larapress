@@ -76,8 +76,11 @@ class Post extends Model
             $articles->where('term_taxonomy_id', $filters['term_id']);
         }
 
-        if(isset($filters['order']))
+        if(isset($filters['order'])){
             $articles->orderBy($filters['order'], 'DESC');
+        }else{
+            $articles->orderBy('post_date', 'DESC');
+        }
 
         if(isset($filters['q'])){
             $articles->where('post_content', 'like', '%'.$filters['q'].'%');
@@ -92,7 +95,7 @@ class Post extends Model
             $image = self::where('post_type', 'attachment')->where('post_parent', $ID)->first();
 
 
-            $articles[$ID]['image'] = 'http://placehold.it/350x150';
+            $articles[$ID]['image'] = '';
             if(isset($image->guid))
                 $articles[$ID]['image'] = $image->guid;
 
@@ -125,7 +128,6 @@ class Post extends Model
 
     public static function getArticleByName($post_name){
        return self::where('post_name', $post_name)
-            ->where('post_type', 'post')
             ->where('post_status', 'publish')
             ->first();
     }
@@ -175,5 +177,64 @@ class Post extends Model
         return $articles;
     }
 
+    public static function getPages($filters=[], $limit = 10){
+        $articles = self::where('post_status', 'publish')
+            ->where('post_type', 'page')
+            ->take($limit);
+
+        if(isset($filters['term_id'])){
+            $articles->leftJoin('wp_term_relationships', 'wp_term_relationships.object_id', '=', 'wp_posts.ID');
+            $articles->where('term_taxonomy_id', $filters['term_id']);
+        }
+
+        if(isset($filters['order'])){
+            $articles->orderBy($filters['order'], 'DESC');
+        }else{
+            $articles->orderBy('post_date', 'DESC');
+        }
+
+        if(isset($filters['q'])){
+            $articles->where('post_content', 'like', '%'.$filters['q'].'%');
+        }
+
+        $articles =$articles->get();
+
+        $articles = $articles->keyBy('ID');
+
+        foreach($articles AS $ID=>$article){
+
+            $image = self::where('post_type', 'attachment')->where('post_parent', $ID)->first();
+
+
+            $articles[$ID]['image'] = '';
+            if(isset($image->guid))
+                $articles[$ID]['image'] = $image->guid;
+
+
+            if(isset($filters['locale']) AND $filters['locale'] =='ru'){
+
+                $post_title = Postmeta::where('post_id',$article->ID)
+                    ->where('meta_key', 'ru_title')
+                    ->first();
+
+                if($post_title)
+                    $article->post_title = $post_title->meta_value;
+
+
+                $post_content = Postmeta::where('post_id',$article->ID)
+                    ->where('meta_key', 'ru_text')
+                    ->first();
+
+
+                if($post_content)
+                    $article->post_content = $post_content->meta_value;
+            }
+
+            $articles[$ID]['post_intro'] =  str_limit(strip_tags(explode('<!--more-->', $article->post_content)[0]), 200);
+
+
+        }
+        return $articles;
+    }
 
 }

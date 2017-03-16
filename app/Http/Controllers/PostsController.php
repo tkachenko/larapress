@@ -68,7 +68,20 @@ class PostsController extends DefaultController
             ]);
     }
 
-    public function search(){
+    public function search(Request $request){
+        $q = $request->input('q');
+        if(!$q)
+            return redirect('/');
 
+        $articles = Post::getArticles(['q'=>$q]);
+
+        $pager = new LengthAwarePaginator([], 10, $this->posts_per_page, null, ['path'=>'/']);
+
+        return view($this->themefolder.'articles',
+            [
+                'articles'=>$articles,
+                'title'=>'Search results',
+                'pager'=>$pager
+            ]);
     }
 }

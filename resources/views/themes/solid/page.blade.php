@@ -1,7 +1,17 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: aver
- * Date: 15.03.17
- * Time: 15:35
- */
+@extends($themefolder.'master')
+
+@section('content')
+
+    <h1>{{$article->post_title}}</h1>
+
+    @if($article->image)
+        <p><img class="img-responsive" src="{{$article->image}}"></p>
+    @endif
+
+    <p>
+        {!! $article->post_content !!}
+    </p>
+    <div class="spacing"></div>
+
+@endsection
+

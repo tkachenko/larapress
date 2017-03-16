@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Posts;
+use App\Models\Post;
 use App\Models\Term;
 use App\Models\Option;
 use View;
@@ -24,6 +24,8 @@ class DefaultController extends Controller
         $this->categories = Term::getCategories();
         $this->tags = Term::getTags();
 
+        $this->pages = Post::getPages();
+
         $this->last_posts = [];
 
         View::share('themefolder', $this->themefolder);
@@ -32,6 +34,7 @@ class DefaultController extends Controller
         View::share('categories', $this->categories);
         View::share('tags',  $this->tags);
         View::share('last_posts',  $this->last_posts);
+        View::share('pages',  $this->pages);
 
     }
 }

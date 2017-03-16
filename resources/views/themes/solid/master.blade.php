@@ -19,7 +19,7 @@
 
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
-    <!--[if lt IE 9]><script src="../../theme/solid/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="/theme/solid/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -44,22 +44,21 @@
             </button>
             <a class="navbar-brand" href="/">{{$blogname}}</a>
         </div>
-        <div class="navbar-collapse collapse navbar-right">
-            <ul class="nav navbar-nav">
-                <li><a href="index.html">HOME</a></li>
-                <li><a href="about.html">ABOUT</a></li>
-                <li><a href="contact.html">CONTACT</a></li>
-                <li class="dropdown active">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">PAGES <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="blog.html">BLOG</a></li>
-                        <li><a href="single-post.html">SINGLE POST</a></li>
-                        <li><a href="portfolio.html">PORTFOLIO</a></li>
-                        <li><a href="single-project.html">SINGLE PROJECT</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
+        @if($pages)
+            <div class="navbar-collapse collapse navbar-right">
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown active">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">PAGES <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @foreach($pages AS $page)
+                                <li><a href="{{$page->post_name}}">{{$page->post_title}}</a></li>
+                            @endforeach
+                        </ul>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        @endif
     </div>
 </div>
 
@@ -75,10 +74,12 @@
         <div class="col-lg-4">
             <h4>Search</h4>
             <div class="hline"></div>
+            <form action="/search" method="get">
             <p>
                 <br/>
-                <input type="text" class="form-control" placeholder="Search something">
+                <input name="q" type="text" class="form-control" placeholder="Search something">
             </p>
+            </form>
 
             <div class="spacing"></div>
 

@@ -2,11 +2,10 @@
 
 @section('content')
 
-
     @foreach($articles AS $article)
-
-
-        <p><img class="img-responsive" src="{{$article->image}}"></p>
+        @if($article->image)
+            <p><img class="img-responsive" src="{{$article->image}}"></p>
+        @endif
         <a href="{{$article->post_name}}"><h3 class="ctitle">{{$article->post_title}}</h3></a>
         <p><csmall>Posted: {{date("d M Y", strtotime($article->post_date))}}</csmall></p>
         <p>{{$article->post_intro}}</p>
@@ -19,9 +18,7 @@
 
     <div class="text-center">
         {!! $pager->render() !!}
-
     </div>
-
 
 @endsection
 
