@@ -52,7 +52,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">PAGES <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             @foreach($pages AS $page)
-                                <li><a href="{{$page->post_name}}">{{$page->post_title}}</a></li>
+                                <li><a href="{{route('post', ['post_name' => $page->post_name])}}">{{$page->post_title}}</a></li>
                             @endforeach
                         </ul>
                     </li>
@@ -87,7 +87,7 @@
                 <h4>Categories</h4>
                 <div class="hline"></div>
                     @foreach($categories AS $category)
-                        <p><a href="/category/{{$category->slug}}"><i class="fa fa-angle-right"></i> {{$category->name}}</a> <span class="badge badge-theme pull-right">{{$category->count}}</span></p>
+                        <p><a href="{{route('category', ['slug' => $category->slug])}}"><i class="fa fa-angle-right"></i> {{$category->name}}</a> <span class="badge badge-theme pull-right">{{$category->count}}</span></p>
                     @endforeach
                 <div class="spacing"></div>
             @endif
@@ -110,7 +110,7 @@
                 <div class="hline"></div>
                 <p>
                     @foreach($tags AS $tag)
-                       <a class="btn btn-theme" href="/tag/{{$tag->slug}}" role="button"> {{$tag->name}}</a>
+                       <a class="btn btn-theme" href="{{route('tag', ['slug' => $tag->slug])}}" role="button"> {{$tag->name}}</a>
                     @endforeach
                 </p>
             @endif

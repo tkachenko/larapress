@@ -47,6 +47,7 @@ class PostsController extends DefaultController
 
     public function show($post_name){
 
+        $post_name  = urlencode($post_name);
         $article = Post::getArticleByName($post_name);
 
         if(!$article)

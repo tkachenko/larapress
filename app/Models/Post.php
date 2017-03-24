@@ -81,7 +81,7 @@ class Post extends Model
         }else{
             $articles->orderBy('post_date', 'DESC');
         }
-
+    // TODO : add more cool search
         if(isset($filters['q'])){
             $articles->where('post_content', 'like', '%'.$filters['q'].'%');
         }

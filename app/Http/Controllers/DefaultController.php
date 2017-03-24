@@ -15,11 +15,14 @@ class DefaultController extends Controller
 
     public function __construct(Request $request)
     {
+
         $this->options = App\Models\Option::all()->keyBy('option_name');
         $this->themefolder = 'themes/solid/';
         $this->title = $this->options['blogname']->option_value;
         $this->description = $this->options['blogdescription']->option_value;
         $this->posts_per_page = $this->options['posts_per_page']->option_value;
+
+        $this->siteurl = $this->options['siteurl']->option_value;
 
         $this->categories = Term::getCategories();
         $this->tags = Term::getTags();
@@ -30,6 +33,7 @@ class DefaultController extends Controller
 
         View::share('themefolder', $this->themefolder);
         View::share('blogname',  $this->title);
+        View::share('siteurl',  $this->siteurl);
 
         View::share('categories', $this->categories);
         View::share('tags',  $this->tags);
