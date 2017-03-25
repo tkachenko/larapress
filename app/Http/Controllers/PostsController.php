@@ -85,4 +85,13 @@ class PostsController extends DefaultController
                 'pager'=>$pager
             ]);
     }
+
+    public function feed(){
+        $articles  = Post::getArticles([],  $this->posts_per_page);
+        return view($this->themefolder.'feed',
+            [
+                'articles'=>$articles,
+                'title'=>'Search results',
+            ]);
+    }
 }
