@@ -1,26 +1,25 @@
 # LaraPress
 ============
 
-Simply Laravel blog CMS witch use WordPress as admin backend
+LaraPress - its simply Laravel blog CMS witch use WordPress as admin backend 
+and Laravel as Frontend.
 
-LaraPress use 
+Main aims of project - simplicity and speed 
+
+More details you may read at http://larapress.mediacolo.net 
+
 
 __Examples:__
 
-http://..
+LaraPress blog demo (and official site) http://larapress.mediacolo.net/
 
 ## Installation
 
-...
+git clone https://github.com/tkachenko/larapress.git
 
-## Basic Usage
+cd larapress/
 
-... 
+composer update
 
-## Change Log
-
-__1.0.0__
-
-- Initial release
-
+Set database settings 
 
