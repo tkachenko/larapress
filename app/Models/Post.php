@@ -65,10 +65,28 @@ class Post extends Model
         return $articles;
     }
 
-    public static function getArticles($filters=[], $limit = 10){
+    public static function getArticlesCount($filters=[]){
+        $articles = self::where('post_status', 'publish')
+            //->where('post_date', '>', '')
+            ->where('post_type', 'post');
+
+        if(isset($filters['term_id'])){
+            $articles->leftJoin('wp_term_relationships', 'wp_term_relationships.object_id', '=', 'wp_posts.ID');
+            $articles->where('term_taxonomy_id', $filters['term_id']);
+        }
+
+        if(isset($filters['q'])){
+            $articles->where('post_content', 'like', '%'.$filters['q'].'%');
+        }
+
+        return $articles->count();
+    }
+
+    public static function getArticles($filters=[], $limit = 10, $skip = 0){
         $articles = self::where('post_status', 'publish')
             //->where('post_date', '>', '')
             ->where('post_type', 'post')
+            ->skip($skip)
             ->take($limit);
 
         if(isset($filters['term_id'])){
@@ -76,14 +94,15 @@ class Post extends Model
             $articles->where('term_taxonomy_id', $filters['term_id']);
         }
 
+    // TODO : add more cool search
+        if(isset($filters['q'])){
+            $articles->where('post_content', 'like', '%'.$filters['q'].'%');
+        }
+
         if(isset($filters['order'])){
             $articles->orderBy($filters['order'], 'DESC');
         }else{
             $articles->orderBy('post_date', 'DESC');
-        }
-    // TODO : add more cool search
-        if(isset($filters['q'])){
-            $articles->where('post_content', 'like', '%'.$filters['q'].'%');
         }
 
         $articles =$articles->get();

@@ -20,7 +20,7 @@ class DefaultController extends Controller
         $this->themefolder = 'themes/solid/';
         $this->title = $this->options['blogname']->option_value;
         $this->description = $this->options['blogdescription']->option_value;
-        $this->posts_per_page = $this->options['posts_per_page']->option_value;
+        $this->posts_per_page = 2;//$this->options['posts_per_page']->option_value;
 
         $this->siteurl = $this->options['siteurl']->option_value;
 
@@ -39,6 +39,12 @@ class DefaultController extends Controller
         View::share('tags',  $this->tags);
         View::share('last_posts',  $this->last_posts);
         View::share('pages',  $this->pages);
+
+        if(isset($_GET['page'])){
+            $this->skip = $this->posts_per_page * (intval($_GET['page'])-1);
+        }else{
+            $this->skip = 0;
+        }
 
     }
 }

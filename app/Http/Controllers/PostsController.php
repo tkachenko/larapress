@@ -12,9 +12,13 @@ class PostsController extends DefaultController
 
     public function index(){
 
-        $articles  = Post::getArticles([],  $this->posts_per_page);
 
-        $pager = new LengthAwarePaginator([], 10,  $this->posts_per_page, null, ['path'=>'/']);
+
+        $articles  = Post::getArticles([],  $this->posts_per_page, $this->skip);
+
+        $articles_count = Post::getArticlesCount();
+
+        $pager = new LengthAwarePaginator([], $articles_count,  $this->posts_per_page, null, ['path'=>'/']);
 
         $title = $this->title;
 
@@ -32,9 +36,11 @@ class PostsController extends DefaultController
         if(!$category)
             return redirect('/');
 
-        $articles = Post::getArticles(['term_id'=>$category->term_id]);
+        $articles = Post::getArticles(['term_id'=>$category->term_id], $this->posts_per_page, $this->skip );
 
-        $pager = new LengthAwarePaginator([], $category->count, $this->posts_per_page, null, ['path'=>'/']);
+        $articles_count = Post::getArticlesCount(['term_id'=>$category->term_id]);
+
+        $pager = new LengthAwarePaginator([], $articles_count, $this->posts_per_page, null, ['path'=>'/category/'.$slug]);
 
         return view($this->themefolder.'articles',
             [
@@ -74,9 +80,11 @@ class PostsController extends DefaultController
         if(!$q)
             return redirect('/');
 
-        $articles = Post::getArticles(['q'=>$q]);
+        $articles = Post::getArticles(['q'=>$q], $this->posts_per_page, $this->skip );
 
-        $pager = new LengthAwarePaginator([], 10, $this->posts_per_page, null, ['path'=>'/']);
+        $articles_count = Post::getArticlesCount(['q'=>$q]);
+
+        $pager = new LengthAwarePaginator([], $articles_count, $this->posts_per_page, null, ['path'=>'/search?q='.$q]);
 
         return view($this->themefolder.'articles',
             [
