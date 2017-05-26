@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Post extends Model
 {
@@ -118,6 +119,7 @@ class Post extends Model
             if(isset($image->guid))
                 $articles[$ID]['image'] = $image->guid;
 
+            $articles[$ID]['terms'] = Term::getObjectTerms($ID);
 
             if(isset($filters['locale']) AND $filters['locale'] =='ru'){
 
@@ -146,9 +148,24 @@ class Post extends Model
     }
 
     public static function getArticleByName($post_name){
-       return self::where('post_name', $post_name)
+       $article = self::where('post_name', $post_name)
             ->where('post_status', 'publish')
             ->first();
+
+        if(!$article)
+            return false;
+
+        $image = self::where('post_type', 'attachment')->where('post_parent', $article->ID)->first();
+
+
+        $article['image'] = '';
+        if(isset($image->guid))
+            $article['image'] = $image->guid;
+
+        $article['terms'] = Term::getObjectTerms($article->ID);
+
+        return $article;
+
     }
 
     public static function getArticlesByID($ids, $filters=[]){

@@ -7,6 +7,7 @@ use App\Models\Term;
 use App\Models\Option;
 use View;
 use Config;
+use App\Models\Links;
 use App;
 use Illuminate\Http\Request;
 
@@ -17,10 +18,11 @@ class DefaultController extends Controller
     {
 
         $this->options = App\Models\Option::all()->keyBy('option_name');
-        $this->themefolder = 'themes/solid/';
+        $this->themefolder = 'themes/clean/';
         $this->title = $this->options['blogname']->option_value;
         $this->description = $this->options['blogdescription']->option_value;
-        $this->posts_per_page = 2;//$this->options['posts_per_page']->option_value;
+        $this->posts_per_page = $this->options['posts_per_page']->option_value;
+        $this->author = '';
 
         $this->siteurl = $this->options['siteurl']->option_value;
 
@@ -34,6 +36,8 @@ class DefaultController extends Controller
         View::share('themefolder', $this->themefolder);
         View::share('blogname',  $this->title);
         View::share('siteurl',  $this->siteurl);
+        View::share('author',  $this->author);
+        View::share('description',  $this->description);
 
         View::share('categories', $this->categories);
         View::share('tags',  $this->tags);

@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="{{$description}}">
+    <meta name="author" content="{{$author}}">
     <link rel="shortcut icon" href="/theme/solid/assets/ico/favicon.ico">
 
     <title>{{$title}}</title>

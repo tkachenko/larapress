@@ -12,13 +12,11 @@ class PostsController extends DefaultController
 
     public function index(){
 
-
-
         $articles  = Post::getArticles([],  $this->posts_per_page, $this->skip);
 
         $articles_count = Post::getArticlesCount();
 
-        $pager = new LengthAwarePaginator([], $articles_count,  $this->posts_per_page, null, ['path'=>'/']);
+        $pager = new LengthAwarePaginator([], $articles_count,  $this->posts_per_page, null, ['path'=>'/', ]);
 
         $title = $this->title;
 
@@ -26,13 +24,16 @@ class PostsController extends DefaultController
             [
                 'articles'=>$articles,
                 'title'=>$title,
-                'pager'=>$pager
+                'pager'=>$pager,
+                'head_title'=> $this->title,
+                'head_about'=> $this->description
+
             ]);
 
     }
     public function category($slug){
 
-        $category = Term::getCategoryBySlug($slug);
+        $category = Term::getCategoryBySlug(urlencode($slug));
         if(!$category)
             return redirect('/');
 
@@ -46,7 +47,34 @@ class PostsController extends DefaultController
             [
                 'articles'=>$articles,
                 'title'=>$category->name,
-                'pager'=>$pager
+                'pager'=>$pager,
+                'head_title'=> $category->name,
+                'head_about'=> $category->description
+
+            ]);
+
+    }
+
+    public function tag($slug){
+
+        $tag = Term::getTagBySlug(urlencode($slug));
+        if(!$tag)
+            return redirect('/');
+
+        $articles = Post::getArticles(['term_id'=>$tag->term_id], $this->posts_per_page, $this->skip );
+
+        $articles_count = Post::getArticlesCount(['term_id'=>$tag->term_id]);
+
+        $pager = new LengthAwarePaginator([], $articles_count, $this->posts_per_page, null, ['path'=>'/tag/'.$slug]);
+
+        return view($this->themefolder.'articles',
+            [
+                'articles'=>$articles,
+                'title'=>$tag->name,
+                'pager'=>$pager,
+                'head_title'=> $tag->name,
+                'head_about'=> $tag->description
+
             ]);
 
     }
@@ -60,8 +88,8 @@ class PostsController extends DefaultController
             return redirect('/');
 
         $image = Post::where('post_type', 'attachment')->where('post_parent', $article->ID)->first();
-        if(isset($image) and $image){
-            $og_image = $image->guid;
+        if(isset($article['image'])){
+            $og_image = $article['image'];
         }else{
             $og_image = false;
         }
